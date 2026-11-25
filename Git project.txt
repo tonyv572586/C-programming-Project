@@ -1,0 +1,98 @@
+#include <stdio.h>
+#define MAX 50      /* room for at least 50 records */
+#define NAME_LEN 30
+/* Parallel arrays: index i holds one course record */
+char  courseName[MAX][NAME_LEN];
+int   credits[MAX];
+float gradePoint[MAX];
+int   count = 0;    /* number of courses added so far */
+int main(void)
+{
+    int choice;
+    int i;
+    while (1)
+    {
+        printf("\n=====================================\n");
+        printf("   CGPA AND TRANSCRIPT GENERATOR\n");
+        printf("=====================================\n");
+        printf("  1. Add course\n");
+        printf("  2. View all courses\n");
+        printf("  3. Calculate SGPA\n");
+        printf("  4. Exit\n");
+        printf("-------------------------------------\n");
+        printf("Enter your choice: ");
+        if (scanf("%d", &choice) != 1)
+        {
+            /* non-numeric input: clear the bad input and retry */
+            while (getchar() != '\n')
+                ;
+            printf("Invalid input. Please enter a number 1-4.\n");
+            continue;
+        }
+        switch (choice)
+        {
+        case 1:
+            if (count >= MAX)
+            {
+                printf("Array is full! Cannot add more than %d courses.\n", MAX);
+                break;
+            }
+            printf("Enter course name: ");
+            scanf(" %29[^\n]", courseName[count]);
+            printf("Enter credits: ");
+            scanf("%d", &credits[count]);
+            if (credits[count] <= 0)
+            {
+                printf("Credits must be greater than 0. Course not added.\n");
+                break;
+            }
+            printf("Enter grade point (0 to 10): ");
+            scanf("%f", &gradePoint[count]);
+            if (gradePoint[count] < 0 || gradePoint[count] > 10)
+            {
+                printf("Grade point must be between 0 and 10. Course not added.\n");
+                break;
+            }
+            count++;
+            printf("Course added with S.No. %d\n", count);
+            break;
+        case 2:
+            if (count == 0)
+            {
+                printf("No courses added yet.\n");
+                break;
+            }
+            printf("\n%-6s %-30s %-8s %-11s\n", "S.No.", "Course Name", "Credits", "Grade Point");
+                       for (i = 0; i < count; i++)
+            {
+            }
+                printf("%-6d %-30s %-8d %-11.2f\n",
+                       i + 1, courseName[i], credits[i], gradePoint[i]);
+            break;
+        case 3:
+        {
+            int   totalCredits = 0;
+            float totalPoints = 0.0f;
+            if (count == 0)
+            {
+                printf("No courses added yet. Add courses first.\n");
+                break;
+            }
+            for (i = 0; i < count; i++)
+            {
+                totalCredits += credits[i];
+                totalPoints  += credits[i] * gradePoint[i];
+            }
+            printf("Total credits          : %d\n", totalCredits);
+            printf("Total (credit x grade) : %.2f\n", totalPoints);
+            printf("SGPA                   : %.2f\n", totalPoints / totalCredits);
+            break;
+        }
+        case 4:
+            printf("Thank you. Exiting program.\n");
+            return 0;
+        default:
+            printf("Invalid choice. Please enter a number 1-4.\n");
+        }
+    }
+}
